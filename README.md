@@ -6,7 +6,7 @@ Traditional eQTL analyses using bulk RNA sequencing (bulk RNA-seq) provide tissu
 
 ## Installation
 
-Git clone the repository and install the package.
+Git clone the repository and install the package:
 
 ```
 conda env create -f environment.yml
