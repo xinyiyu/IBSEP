@@ -2,7 +2,7 @@
 This repository holds the code for the paper "A unified framework for cell-type-specific eQTLs prioritization by integrating bulk and scRNA-seq data".
 
 ## Description
-Traditional eQTL analyses using bulk RNA sequencing (bulk RNA-seq) provide tissue-level insights but suffer from signal loss and distortion due to unaddressed cellular heterogeneity. Recently, single-cell RNA sequencing (scRNA-seq) has provided higher resolution enabling cell-type-specific eQTL (ct-eQTL) analyses. However, these studies are limited by their smaller sample sizes and technical constraints. We present a novel statistical framework, IBSEP, which integrates bulk RNA-seq and scRNA-seq data for enhanced ct-eQTLs prioritization. Our method employs a Bayesian hierarchical model to combine summary statistics from both data types. IBSEP demonstrates superior performance in identifying ct-eQTLs and unveils new transcriptional regulatory mechanisms specific to cell types, offering deeper insights into the genetic basis of complex diseases at a cellular resolution.
+Traditional eQTL analyses using bulk RNA sequencing (bulk RNA-seq) provide tissue-level insights but suffer from signal loss and distortion due to unaddressed cellular heterogeneity. Recently, single-cell RNA sequencing (scRNA-seq) has provided higher resolution enabling cell-type-specific eQTL (ct-eQTL) analyses. However, these studies are limited by their smaller sample sizes and technical constraints. We present a novel statistical framework, IBSEP, which integrates bulk RNA-seq and scRNA-seq data for enhanced ct-eQTLs prioritization. IBSEP demonstrates superior performance in identifying ct-eQTLs and unveils new transcriptional regulatory mechanisms specific to cell types, offering deeper insights into the genetic basis of complex diseases at a cellular resolution.
 
 ## Installation
 
@@ -91,6 +91,12 @@ CHR     BP      A1      A2      SNP     GENEID  GENENAME        BETA    SE      
 19      49744995        A       T       rs1716276       ENSG00000104894 CD37    -0.0020510021528886     0.098058067569092       0.9834052       0.20204551346764305  0.07089711105082191     0.0043741051405087735
 19      49745289        T       G       rs4318314       ENSG00000104894 CD37    0.033686819503652       0.098058067569092       0.7312976       -0.006101310669275541        0.0650672474336624      0.9252924140723515
 ```
+
+### Example
+The [example scripts](https://github.com/xinyiyu/IBSEP/tree/main/scripts) and [example data](https://github.com/xinyiyu/IBSEP/tree/main/examples) demonstrate how IBSEP works on one gene and genes in one chromosome.
+
+## Reproducibility
+We provide [scripts](https://github.com/xinyiyu/IBSEP/tree/main/scripts) and [notebooks](https://github.com/xinyiyu/IBSEP/tree/main/notebooks) for reproducing the real data analysis results of IBSEP. 
 
 ## Reference
 Xinyi Yu, Xianghong HU, Xiaomeng Wan, Zhiyong Zhang, Mingxuan Cai, Tianwei Yu, Jiashun Xiao. A unified framework for cell-type-specific eQTLs prioritization by integrating bulk and scRNA-seq data. 2024. doi: https://doi.org/10.1101/2024.05.27.24307972.

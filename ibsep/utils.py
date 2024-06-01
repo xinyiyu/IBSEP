@@ -25,7 +25,7 @@ def GenotypeMoment(G_geno):
     G_geno_sd = G_geno.var(axis=0)**.5
     return G_geno_mean, G_geno_sd
 
-def restric_corr(A,maxc=0.95):
+def restrict_corr(A,maxc=0.95):
     d = A.shape[0]
     for i in range(d):
         A[i,i] = A[i,i] if A[i,i]>0 else 1e-12 
@@ -56,5 +56,4 @@ def make_omega_pd(Omega, Omega_se, shrink=0.9):
         Omega_se = diag_Omega_se + off_Omega_se
         eigs = np.linalg.eigvals(Omega)
         j += 1
-    print(j)
     return Omega, Omega_se, j

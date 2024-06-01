@@ -17,16 +17,25 @@ def run_experiment(data_dir, out_dir, gene_id, cell_type_df, pval_thres, trun_co
     props = cell_type_df.iloc[indices, :]['prop'].values
         
     ## load data (TODO: merge sumstats with tissue in case different SNP order)
+    common_snps = []
     sumstats = {}
     for cell_type in cell_types:
         sumstat = pd.read_csv(os.path.join(data_dir, f'{gene_id}_{cell_type}.csv'), sep='\t')
+        sumstat.drop_duplicates(subset=['SNP'], inplace=True)
         sumstat['Z'] = sumstat.BETA / sumstat.SE
         sumstat['N'] = 1 / sumstat.SE ** 2
-        sumstats[cell_type] = sumstat.sort_values(by='BP').reset_index(drop=True)
+        sumstats[cell_type] = sumstat
+        common_snps.append(sumstat.SNP.unique().tolist())
     tissue = pd.read_csv(os.path.join(data_dir, f'{gene_id}_gtex_withld.csv'), sep='\t')
-    tissue = tissue.sort_values(by='BP').reset_index(drop=True)
+    tissue.drop_duplicates(subset=['SNP'], inplace=True)
     tissue['Z'] = tissue.BETA / sumstat.SE
     tissue['N'] = 1 / tissue.SE ** 2
+    common_snps.append(tissue.SNP.unique().tolist())
+    # keep common snps
+    common_snps = list(set.intersection(*map(set, common_snps)))
+    for cell_type in cell_types:
+        sumstats[cell_type] = sumstats[cell_type].loc[sumstats[cell_type].SNP.isin(common_snps)].sort_values(by='BP').reset_index(drop=True)
+    tissue = tissue.loc[tissue.SNP.isin(common_snps)].sort_values(by='BP').reset_index(drop=True)
     ld = tissue.LD.values[:,None]
     M = len(ld)
     
@@ -50,7 +59,7 @@ def run_experiment(data_dir, out_dir, gene_id, cell_type_df, pval_thres, trun_co
     oriOmega = Omega.copy() * M
     oriOmega_se = Omega_se.copy() * M
     for i in range(len(Omega)):
-        Omega[i, i] = min(Omega[i, i], max_hsq/M) # max heritability: 0.8
+        Omega[i, i] = min(Omega[i, i], 0.8/M) # max heritability: 0.8
     Omega = utils.restrict_corr(Omega, 0.95) # max correlation: 0.95
 
     ## hij test
@@ -96,6 +105,7 @@ def run_experiment(data_dir, out_dir, gene_id, cell_type_df, pval_thres, trun_co
         sumstat['BETA_IBSEP'] = betas_tensor[:, i]
         sumstat['SE_IBSEP'] = ses_tensor[:, i]
         sumstat['PVAL_IBSEP'] = pval_tensor[:, i]
+        sumstat.drop(columns=['Z', 'N'], inplace=True)
         filename = f'{gene_id}_{cell_type}_IBSEP'
         if trun_corr:
             filename = f'{gene_id}_{cell_type}_IBSEP_truncorr_pval{pval_thres}'
@@ -121,7 +131,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     ## load cell type proportion
-    cell_type_df = pd.read_csv(args.cell_type_props, sep='\t')
+    cell_type_df = pd.read_csv(args.avg_props, sep='\t')
     cell_type_df.cell_type = cell_type_df.cell_type.apply(lambda x: x.replace(' ', '_'))
     cell_type_df = cell_type_df.sort_values(by='cell_type').reset_index(drop=True)
     cell_types = cell_type_df.cell_type.values.tolist()
@@ -129,16 +139,14 @@ if __name__ == '__main__':
     print(f"[{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}] {len(cell_types)} cell types in total:")
     print(cell_type_df)
     
-    ## perform ours/tram
+    ## perform IBSEP
     t0 = time.time()
     gene_id = args.gene_id
     reg_int_ident = True
-    if args.not_ref_int_ident:
+    if args.not_reg_int_ident:
         reg_int_ident = False
     print(f"[{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}] Gene id: {gene_id}")
-    print(f"[{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}] Start IBSEP")
     run_experiment(args.data_dir, args.out_dir, gene_id, cell_type_df, args.pval_thres, args.trun_corr, args.zero_corr, reg_int_ident)
-    print(f"[{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}] Finish IBSEP")
-    print(f"[{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}] Total time: {time.time() - t0:.1f}s")
+    print(f"[{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}] IBSEP running time: {time.time() - t0:.1f}s")
 
 

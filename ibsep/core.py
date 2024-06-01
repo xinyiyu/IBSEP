@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings('ignore') 
 
 ## IBSEP estimator
-def TensorBlue(betas, ses, props, Omega, Sigma, ld):
+def TensorIBSEP(betas, ses, props, Omega, Sigma, ld):
     """
     Runs the core method to combine results and generate final, combined summary statistics
     :param betas: Mx(P+1) matrix of beta values (M = # of SNPs, P = # of cell types)
@@ -74,7 +74,7 @@ def TensorBlue(betas, ses, props, Omega, Sigma, ld):
     new_betas = denom_recip_view * numer_view
     new_beta_ses = np.sqrt(denom_recip_view)
 
-    return new_betas, new_beta_ses, left_product_view
+    return new_betas, new_beta_ses
 
 
 ## run IBSEP

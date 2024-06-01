@@ -1,0 +1,12 @@
+LICENSE
+README.md
+setup.py
+ibsep/__init__.py
+ibsep/core.py
+ibsep/ldsc.py
+ibsep/prioritize.py
+ibsep/utils.py
+ibsep.egg-info/PKG-INFO
+ibsep.egg-info/SOURCES.txt
+ibsep.egg-info/dependency_links.txt
+ibsep.egg-info/top_level.txt
