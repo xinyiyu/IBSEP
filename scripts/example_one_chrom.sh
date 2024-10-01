@@ -1,5 +1,5 @@
 python ibsep/prioritize_batch.py \
-    --data-dir examples/one_chrom \
-    --out-dir examples/one_chrom \
-    --avg-props examples/avg_props.csv \
+    --data-dir examples/brain_chr1/input \
+    --out-dir examples/brain_chr1/output \
+    --avg-props examples/brain_meanprops8.csv \
     --trun-corr

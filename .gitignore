@@ -12,3 +12,4 @@ env/
 # Custom
 *.egg-info/
 data/
+examples/brain_chr1

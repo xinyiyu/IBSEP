@@ -30,52 +30,54 @@ IBSEP performs ct-eQTLs prioritization one gene at a time. For each gene, IBSEP 
 * Tissue-level eQTLs summary statistics
 * Average proportions of cell type 1, ..., $K$ in tissue samples
 
-Suppose we apply IBSEP on blood ct-eQTLs prioritization using public eQTLs summary statistics for B cells, CD4 cells, CD8 cells, natural killer (NK) cells, monocytes and dendritic cells (DC), and public blood tissue eQTLs summary statistics (e.g from GTEx). For one gene (e.g ENSG00000104894), its eQTLs file for B cell looks like:
+Suppose we apply IBSEP on brain ct-eQTLs prioritization using public eQTLs summary statistics for excitatory neurons, inhibitory neurons, astrocytes, oligodendrocytes, microglia, OPCs, endothelial, pericytes, and GTEx brain cortex eQTL summary statistics. For one gene (e.g ENSG00000117500), its eQTLs file for excitatory neurons looks like:
 
 ``` shell
-$ head ENSG00000104894_B.csv
+$ head ENSG00000117500_Excitatory_neurons.csv
 CHR     BP      A1      A2      SNP     GENEID  GENENAME        BETA    SE      PVAL
-19      49742632        T       C       rs4802592       ENSG00000104894 CD37    0.0130254061242457      0.098058067569092       0.8941934
-19      49743782        A       C       rs2878364       ENSG00000104894 CD37    0.0360282990701006      0.098058067569092       0.7133207
-19      49744538        A       C       rs2335186       ENSG00000104894 CD37    0.0346677139651592      0.098058067569092       0.7237886
-19      49744995        A       T       rs1716276       ENSG00000104894 CD37    -0.0020510021528886     0.098058067569092       0.9834052
-19      49745289        T       G       rs4318314       ENSG00000104894 CD37    0.033686819503652       0.098058067569092       0.7312976
+1       92647223        A       G       rs560389        ENSG00000117500 TMED5   0.0708231       0.0465664584890307      0.128284
+1       92647636        G       T       rs17578364      ENSG00000117500 TMED5   0.088615        0.0752085231859952      0.238694
+1       92649292        A       T       rs570368        ENSG00000117500 TMED5   0.0708231       0.0465664584890307      0.128284
+1       92650349        C       T       rs539288        ENSG00000117500 TMED5   0.0583558       0.0464225571977956      0.208733
+1       92652691        T       C       rs112517106     ENSG00000117500 TMED5   -0.105728       0.0948710715648838      0.265091
 ```
 
-The eQTLs files for other cell types are of the same form and are named as `<gene_id>_<cell_type>.csv`. Columns `CHR, BP, A1, A2, SNP, BETA, SE` are required. The blood tisue eQTL summary statistics also has a similar format and is named as `<gene_id>_gtex_withld.csv` if GTEx data is used:
+The eQTLs files for other cell types are of the same form and are named as `<gene_id>_<cell_type>.csv`. Columns `CHR, BP, A1, A2, SNP, BETA, SE` are required. The tissue-level eQTL summary statistics also has a similar format and is named as `<gene_id>_gtex_withld.csv` if GTEx data is used:
 
 ``` shell
-$ head ENSG00000104894_gtex_withld.csv
+$ head ENSG00000117500_gtex_withld.csv
 CHR     BP      A1      A2      SNP     GENEID  GENENAME        BETA    SE      PVAL    LD
-19      49742632        T       C       rs4802592       ENSG00000104894 CD37    0.0225815       0.0183049       0.217823        50.2383728027
-19      49743782        A       C       rs2878364       ENSG00000104894 CD37    -0.0114515      0.0179085       0.522777        49.6510276794
-19      49744538        A       C       rs2335186       ENSG00000104894 CD37    -0.00790063     0.0179737       0.66041 49.65102005
-19      49744995        A       T       rs1716276       ENSG00000104894 CD37    0.0881959       0.0212669       3.85289e-05     54.7710914612
-19      49745289        T       G       rs4318314       ENSG00000104894 CD37    -0.00775093     0.0180235       0.667316        49.65102005
+1       92647223        A       G       rs560389        ENSG00000117500 TMED5   -0.0938936      0.0453816       0.0401076       140.784896851
+1       92647636        G       T       rs17578364      ENSG00000117500 TMED5   -0.100632       0.0749145       0.181022        27.6296691895
+1       92649292        A       T       rs570368        ENSG00000117500 TMED5   -0.0818084      0.0448585       0.070007        140.784896851
+1       92650349        C       T       rs539288        ENSG00000117500 TMED5   -0.0729709      0.0454674       0.110427        157.327850342
+1       92652691        T       C       rs112517106     ENSG00000117500 TMED5   -0.0994571      0.072868        0.174145        151.522323608
 ```
 
 Here, an additional column `LD` is present as IBSEP requires LD scores. LD scores can be calculated using the 1000 Genome reference panel (for European population). Before running IBSEP, we need to estimate proportions of cell types of interest in tissue samples using some cell type deconvolution method (e.g xCell/Cibersortx). Then we obtain the average cell type proportions:
 
 ``` shell
-$ cat avg_props.csv
+$ cat brain_meanprops8.csv
 cell_type       prop
-B       0.20722903601366718
-CD4T    0.21487472191709173
-CD8T    0.17785976564054523
-DC      0.016122039530804287
-monocyte        0.1519457097589802
-NK      0.07374181989335338
+Inhibitory neurons      0.102130737487027
+Oligodendrocytes        0.169931676536728
+Excitatory neurons      0.308488897051598
+Astrocytes      0.290533778997567
+OPCs    0.00379891008352746
+Microglia       0.0490726269125998
+Pericytes       0.024231706135807
+Endothelial     0.0518116667951463
 ```
 
 ### Usage
-IBSEP integrates cell-type-level eQTLs summary statistics and tissue-level eQTLs summary statistics to prioritize ct-eQTLs. Specify `<data_dir>` containing summary statistics, `<out_dir>` for saving IBSEP output files and `gene_id` (e.g ENSG00000104894). As mentioned in our paper, IBSEP performs test on genetic correlations between cell types and set a small $p$-value threshold so that insignificant correlations are truncated to zero. We also recommand restricting the intercept matrix of LDSC to be an identity matrix if no strong evidence on sample overlap. The command for running IBSEP on one gene is as follow:
+IBSEP integrates cell-type-level eQTLs summary statistics and tissue-level eQTLs summary statistics to prioritize ct-eQTLs. Specify `<data_dir>` containing summary statistics, `<out_dir>` for saving IBSEP output files, a table `<avg_props.csv>` providing average cell type proportions and `<gene_id>` (e.g ENSG00000117500). As mentioned in our paper, IBSEP performs test on genetic correlations between cell types and set a small $p$-value threshold so that insignificant correlations are truncated to zero. We also recommand restricting the intercept matrix of LDSC to be an identity matrix if no strong evidence on sample overlap. The command for running IBSEP on one gene is as follow:
 
 ``` shell
 python ibsep/prioritize.py \
     --data-dir <data_dir> \
     --out-dir <out_dir> \
-    --avg-props avg_props.csv \
-    --gene-id gene_id \
+    --avg-props <avg_props.csv> \
+    --gene-id <gene_id> \
     --trun-corr
 ```
 
@@ -83,17 +85,16 @@ python ibsep/prioritize.py \
 The major output of IBSEP contains improved ct-eQTLs summary statistics of cell types 1, ..., $K$. Here is an example output summary statistics file:
 
 ``` shell
-$ head ENSG00000104894_B_IBSEP_pval1e-10_truncorr.csv
-CHR     BP      A1      A2      SNP     GENEID  GENENAME        BETA    SE      PVAL     BETA_BLUE       SE_BLUE PVAL_BLUE
-19      49742632        T       C       rs4802592       ENSG00000104894 CD37    0.0130254061242457      0.098058067569092       0.8941934       0.06599009919719703  0.0656300056917588      0.3146625406113458
-19      49743782        A       C       rs2878364       ENSG00000104894 CD37    0.0360282990701006      0.098058067569092       0.7133207       -0.015352725024721278        0.06483390165999987     0.8128112681380122
-19      49744538        A       C       rs2335186       ENSG00000104894 CD37    0.0346677139651592      0.098058067569092       0.7237886       -0.006172963972433082        0.06496643986209406     0.9243007400910752
-19      49744995        A       T       rs1716276       ENSG00000104894 CD37    -0.0020510021528886     0.098058067569092       0.9834052       0.20204551346764305  0.07089711105082191     0.0043741051405087735
-19      49745289        T       G       rs4318314       ENSG00000104894 CD37    0.033686819503652       0.098058067569092       0.7312976       -0.006101310669275541        0.0650672474336624      0.9252924140723515
+$ head ENSG00000117500_Excitatory_neurons_IBSEP_truncorr_pval1e-10.csv
+CHR     BP      A1      A2      SNP     GENEID  GENENAME        BETA    SE      PVAL    BETA_IBSEP      SE_IBSEP        PVAL_IBSEP
+1       92647223        A       G       rs560389        ENSG00000117500 TMED5   0.0708231       0.0465664584890307      0.128284        0.015446450635914216    0.0260622271503747      0.5533981577249139
+1       92647636        G       T       rs17578364      ENSG00000117500 TMED5   0.088615        0.0752085231859952      0.238694        -0.035877049952112265   0.03472936391585988     0.30158210979172717
+1       92649292        A       T       rs570368        ENSG00000117500 TMED5   0.0708231       0.0465664584890307      0.128284        0.0175173325550378      0.026022131792201596    0.5008387999823593
+1       92650349        C       T       rs539288        ENSG00000117500 TMED5   0.0583558       0.0464225571977956      0.208733        0.014585469956598996    0.0263835006060214      0.5803829562933673
+1       92652691        T       C       rs112517106     ENSG00000117500 TMED5   -0.105728       0.0948710715648838      0.265091        -0.041378004994756364   0.043257948643890196    0.33879893928307037
 ```
 
-### Example
-The [example scripts](https://github.com/xinyiyu/IBSEP/tree/main/scripts) and [example data](https://github.com/xinyiyu/IBSEP/tree/main/examples) demonstrate how IBSEP works on one gene and genes in one chromosome.
+The input, output and script for this example can be found at [example scripts](https://github.com/xinyiyu/IBSEP/tree/main/scripts) and [example data](https://github.com/xinyiyu/IBSEP/tree/main/examples).
 
 ## Reproducibility
 We provide [scripts](https://github.com/xinyiyu/IBSEP/tree/main/scripts) and [notebooks](https://github.com/xinyiyu/IBSEP/tree/main/notebooks) for reproducing the real data analysis results of IBSEP. 
