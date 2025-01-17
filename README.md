@@ -100,7 +100,7 @@ The input, output and script for this example can be found at [example scripts](
 We provide [scripts](https://github.com/xinyiyu/IBSEP/tree/main/scripts) and [notebooks](https://github.com/xinyiyu/IBSEP/tree/main/notebooks) for reproducing the real data analysis results of IBSEP. 
 
 ## Reference
-Xinyi Yu, Xianghong HU, Xiaomeng Wan, Zhiyong Zhang, Mingxuan Cai, Tianwei Yu, Jiashun Xiao. A unified framework for cell-type-specific eQTLs prioritization by integrating bulk and scRNA-seq data. 2024. doi: https://doi.org/10.1101/2024.05.27.24307972.
+Xinyi Yu, Xianghong HU, Xiaomeng Wan, Zhiyong Zhang, Mingxuan Cai, Tianwei Yu, Jiashun Xiao. A unified framework for cell-type-specific eQTLs prioritization by integrating bulk and scRNA-seq data, \textit{The American Journal of Human Genetics} (2025), https://doi.org/10.1016/j.ajhg.2024.12.018
 
 ## Contact information
 Please contact Xinyi Yu (xyyu98@gmail.com) and Dr. Jiashun Xiao (xiaojiashun@sribd.cn) if any enquiry.
